@@ -66,7 +66,7 @@ template<typename MessageType>
 class Publisher
 {
   public:
-    Publisher(std::shared_ptr<Topic<MessageType>> topic)
+    Publisher(const std::shared_ptr<Topic<MessageType>>& topic)
       : topic(topic)
     {
     }
@@ -81,8 +81,8 @@ template<typename MessageType>
 class Subscriber
 {
   public:
-    Subscriber(std::shared_ptr<Topic<MessageType>> topic,
-               std::shared_ptr<MessageHandler<MessageType>> handler)
+    Subscriber(const std::shared_ptr<Topic<MessageType>>& topic,
+               const std::shared_ptr<MessageHandler<MessageType>>& handler)
       : topic(topic)
       , handler(handler)
     {
