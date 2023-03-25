@@ -19,7 +19,7 @@ main()
 {
     EventFlow::TopicRegistry registry;
 
-    EventFlow::Topic<ExampleMessage>& example_topic =
+    auto example_topic =
       registry.get_topic<ExampleMessage>("example_topic");
 
     auto handler = std::make_shared<ExampleMessageHandler>();

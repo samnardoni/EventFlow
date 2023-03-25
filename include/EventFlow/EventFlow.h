@@ -45,16 +45,16 @@ class TopicRegistry
 {
   public:
     template<typename MessageType>
-    Topic<MessageType>& get_topic(const std::string& topic_name)
+    std::shared_ptr<Topic<MessageType>> get_topic(const std::string& topic_name)
     {
         const auto it = topics.find(topic_name);
         if (it != topics.end()) {
             // TODO: type safety
-            return *static_cast<Topic<MessageType>*>(it->second.get());
+            return std::static_pointer_cast<Topic<MessageType>>(it->second);
         } else {
             auto new_topic = std::make_shared<Topic<MessageType>>();
             topics[topic_name] = new_topic;
-            return *new_topic;
+            return new_topic;
         }
     }
 
@@ -66,33 +66,33 @@ template<typename MessageType>
 class Publisher
 {
   public:
-    Publisher(Topic<MessageType>& topicInstance)
-      : topic(topicInstance)
+    Publisher(std::shared_ptr<Topic<MessageType>> topic)
+      : topic(topic)
     {
     }
 
-    void publish(const MessageType& msg) { topic.publish(msg); }
+    void publish(const MessageType& msg) { topic->publish(msg); }
 
   private:
-    Topic<MessageType>& topic;
+    std::shared_ptr<Topic<MessageType>> topic;
 };
 
 template<typename MessageType>
 class Subscriber
 {
   public:
-    Subscriber(Topic<MessageType>& topic,
+    Subscriber(std::shared_ptr<Topic<MessageType>> topic,
                std::shared_ptr<MessageHandler<MessageType>> handler)
       : topic(topic)
       , handler(handler)
     {
-        topic.subscribe(handler);
+        topic->subscribe(handler);
     }
 
-    ~Subscriber() { topic.unsubscribe(handler); }
+    ~Subscriber() { topic->unsubscribe(handler); }
 
   private:
-    Topic<MessageType> topic;
+    std::shared_ptr<Topic<MessageType>> topic;
     std::shared_ptr<MessageHandler<MessageType>> handler;
 };
 }
