@@ -19,17 +19,17 @@ target_include_directories(EventFlow INTERFACE
 # Install the library target
 install(TARGETS EventFlow
     EXPORT EventFlowTargets
-    INCLUDES DESTINATION include
+    PUBLIC_HEADER
+)
+
+# Install the exported targets
+install(EXPORT EventFlowTargets
+    NAMESPACE EventFlow::
+    FILE EventFlowConfig.cmake
+    DESTINATION lib/cmake/EventFlow
 )
 
 # Install the header files
 install(DIRECTORY include/
     DESTINATION include
-)
-
-# Install the exported targets
-install(EXPORT EventFlowTargets
-    FILE EventFlowTargets.cmake
-    NAMESPACE EventFlow::
-    DESTINATION lib/cmake/EventFlow
 )
